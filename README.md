@@ -1,0 +1,2 @@
+# Aquí se encuentra el código para la placa de desarrollo ESP32 M5 Stack Core con pantalla LCD integrada
+# Es importante utilizar la versión 2.0.17 de la biblioteca de placas correspondiente, la actual no funciona correctamente

@@ -6,7 +6,7 @@
 // Configuración WiFi
 #define WIFI_SSID "LoRaAp"
 #define WIFI_PASSW "estonotieneinternet"
-#define API_URL "http://192.168.1.69/api/data"
+#define API_URL "http://192.168.69.69/api/data"
 
 // Variables de datos
 String gpsLat;

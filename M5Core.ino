@@ -9,13 +9,9 @@
 #define API_URL "http://192.168.69.69/api/data"
 
 // Variables de datos
-String gpsLat;
-String gpsLon;
 String altitude;
 String temperature;
 String pressure; 
-String rads;
-
 
 void setup() {
   M5.begin();
@@ -34,7 +30,7 @@ void loop() {
 }
 
 void connectToWiFi() {
-  M5.Lcd.setCursor(10, 10);
+  M5.Lcd.setCursor(10, 0);
   M5.Lcd.println("Conectando a WiFi...");
   WiFi.begin(WIFI_SSID, WIFI_PASSW);
   while (WiFi.status() != WL_CONNECTED) {
@@ -42,6 +38,7 @@ void connectToWiFi() {
     M5.Lcd.print(".");
   }
   M5.Lcd.clear();
+  M5.Lcd.setCursor(20,0);
   M5.Lcd.setTextColor(GREEN);
   M5.Lcd.println("Conectado a WiFi!");
   M5.Lcd.println("    IP: " + WiFi.localIP().toString());
@@ -50,11 +47,10 @@ void connectToWiFi() {
 }
 
 void fetchDataFromAPI() {
-  if (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED) {
     M5.Lcd.setTextColor(RED);
     M5.Lcd.setCursor(10, 200);
     M5.Lcd.println("WiFi Desconectado!");
-    return;
   }
 
   HTTPClient http;
@@ -71,12 +67,9 @@ void fetchDataFromAPI() {
     DeserializationError error = deserializeJson(doc, payload);
 
     if (!error) {
-      gpsLat = doc["gps"]["lat"].as<String>();
-      gpsLon = doc["gps"]["lon"].as<String>();
       altitude = doc["alt"].as<String>();
       temperature = doc["temp"].as<String>();
       pressure = doc["press"].as<String>();
-      rads = doc["rads"].as<String>();
     } else {
       M5.Lcd.setTextColor(RED);
       M5.Lcd.setCursor(10, 220);
@@ -93,18 +86,15 @@ void fetchDataFromAPI() {
 void drawInterface() {
   M5.Lcd.clear();
   M5.Lcd.setTextColor(WHITE);
-  M5.Lcd.setTextSize(2);
+  M5.Lcd.setTextSize(3);
 
-  M5.Lcd.setCursor(10, 10);
-  M5.Lcd.setTextColor(YELLOW);
-  M5.Lcd.println("Datos de CANSAT");
+  M5.Lcd.setCursor(10, 20);
+  M5.Lcd.fillRect(0, 50, 320, 240, PURPLE);
+  M5.Lcd.setTextColor(WHITE);
+  M5.Lcd.println("Datos LiNkInSaT");
   M5.Lcd.setTextColor(WHITE);
 
-  M5.Lcd.setCursor(10, 40);
-  M5.Lcd.println("GPS: Lat: " + gpsLat);
-  M5.Lcd.setCursor(10, 60);
-  M5.Lcd.println("     Lon: " +  gpsLon);
-
+  M5.Lcd.setTextSize(2);
   M5.Lcd.setCursor(10, 90);
   M5.Lcd.printf("Altitud: %s\n", altitude);
 
@@ -113,7 +103,4 @@ void drawInterface() {
 
   M5.Lcd.setCursor(10, 150);
   M5.Lcd.printf("Presion: %s\n", pressure);
-
-  M5.Lcd.setCursor(10, 180);
-  M5.Lcd.printf("Rads: %s", rads);
 }
